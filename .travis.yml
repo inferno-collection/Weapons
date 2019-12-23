@@ -1,0 +1,38 @@
+# Inferno Collection Weapons Version 1.1 ALPHA - DO NOT DISTRIBUTE
+#
+# Copyright (c) 2019, Christopher M, Inferno Collection. All rights reserved.
+
+#
+#   This file is used by Travis CI to make sure all the code is this project is error free, and up conventional standards.
+#   This file does not do anything within FiveM, so feel free to delete it. Keeping it will not do any harm to the resource or your server.
+#
+
+language: python
+sudo: false
+
+env:
+  - LUA="lua=5.1"
+  - LUA="lua=5.2"
+  - LUA="lua=5.3"
+  - LUA="luajit=2.0"
+  - LUA="luajit=2.1"
+
+before_install:
+  - pip install hererocks
+  - hererocks lua_install -r^ --$LUA
+  - export PATH=$PATH:$PWD/lua_install/bin
+
+install:
+  - luarocks install luacheck
+
+script:
+  - luacheck -g -a --no-max-line-length --no-max-comment-line-length [inferno-collection]/inferno-weapons
+
+after_success:
+  - wget https://raw.githubusercontent.com/DiscordHooks/travis-ci-discord-webhook/master/send.sh
+  - chmod +x send.sh
+  - ./send.sh success $WEBHOOK_URL
+after_failure:
+  - wget https://raw.githubusercontent.com/DiscordHooks/travis-ci-discord-webhook/master/send.sh
+  - chmod +x send.sh
+  - ./send.sh failure $WEBHOOK_URL

@@ -1,11 +1,11 @@
--- Inferno Collection Weapons Version 1.1 ALPHA
+-- Inferno Collection Weapons Version 1.2 Alpha
 --
 -- Copyright (c) 2019, Christopher M, Inferno Collection. All rights reserved.
 --
 -- This project is licensed under the following:
--- Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to use, copy, modify, and merge the software, under the following conditions:
+-- Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the 'Software'), to use, copy, modify, and merge the software, under the following conditions:
 -- The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
--- THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. THE SOFTWARE MAY NOT BE SOLD.
+-- THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. THE SOFTWARE MAY NOT BE SOLD.
 --
 
 --
@@ -14,78 +14,82 @@
 -- PLEASE RESTART SERVER AFTER MAKING CHANGES TO THIS CONFIGURATION
 --
 local Config = {} -- Do not edit this line
+
 -- The ID of the key used to change fire mode
 -- https://docs.fivem.net/game-references/controls/
 Config.SelectorKey = 26
--- Weapons variables
-Config.Weapons = {} -- Do not edit this line
 
+-- Whether or not to enable selector images when changing fire modes
+Config.SelectorImages = true
+
+-- Weapons variables
 --
 -- Do not place a weapon in more than one list, or you may experience unexpected behaviour.
 -- Weapons not placed in this list will behave like they do in normal GTA 5, including melee, etc.
 --
+Config.Weapons = {} -- Do not edit this line
 
 -- These weapons will have safety and semi-automatic modes only
 Config.Weapons.Single = {
-	"WEAPON_REVOLVER",
-	"WEAPON_PISTOL",
-	"WEAPON_PISTOL_MK2",
-	"WEAPON_COMBATPISTOL",
-	"WEAPON_PISTOL50",
-	"WEAPON_SNSPISTOL",
-	"WEAPON_HEAVYPISTOL",
-	"WEAPON_VINTAGEPISTOL",
-	"WEAPON_MARKSMANPISTOL",
-	"WEAPON_PUMPSHOTGUN",
-	"WEAPON_SNSPISTOL_MK2",
-	"WEAPON_REVOLVER_MK2"
+	'WEAPON_REVOLVER',
+	'WEAPON_PISTOL',
+	'WEAPON_PISTOL_MK2',
+	'WEAPON_COMBATPISTOL',
+	'WEAPON_PISTOL50',
+	'WEAPON_SNSPISTOL',
+	'WEAPON_HEAVYPISTOL',
+	'WEAPON_VINTAGEPISTOL',
+	'WEAPON_MARKSMANPISTOL',
+	'WEAPON_PUMPSHOTGUN',
+	'WEAPON_SNSPISTOL_MK2',
+	'WEAPON_REVOLVER_MK2'
 }
 
 -- These weapons will have safety, semi-automatic, burst shot, and full auto modes
 Config.Weapons.Full = {
-	"WEAPON_MINISMG",
-	"WEAPON_SMG",
-	"WEAPON_SMG_MK2",
-	"WEAPON_ASSAULTSMG",
-	"WEAPON_MG",
-	"WEAPON_COMBATMG",
-	"WEAPON_COMBATMG_MK2",
-	"WEAPON_COMBATPDW",
-	"WEAPON_APPISTOL",
-	"WEAPON_MACHINEPISTOL",
-	"WEAPON_ASSAULTRIFLE",
-	"WEAPON_ASSAULTRIFLE_MK2",
-	"WEAPON_CARBINERIFLE",
-	"WEAPON_CARBINERIFLE_MK2",
-	"WEAPON_ADVANCEDRIFLE",
-	"WEAPON_SPECIALCARBINE",
-	"WEAPON_BULLPUPRIFLE",
-	"WEAPON_COMPACTRIFLE",
-	"WEAPON_SPECIALCARBINE_MK2",
-	"WEAPON_BULLPUPRIFLE_MK2",
-	"WEAPON_PUMPSHOTGUN_MK2"
+	'WEAPON_MINISMG',
+	'WEAPON_SMG',
+	'WEAPON_SMG_MK2',
+	'WEAPON_ASSAULTSMG',
+	'WEAPON_MG',
+	'WEAPON_COMBATMG',
+	'WEAPON_COMBATMG_MK2',
+	'WEAPON_COMBATPDW',
+	'WEAPON_APPISTOL',
+	'WEAPON_MACHINEPISTOL',
+	'WEAPON_ASSAULTRIFLE',
+	'WEAPON_ASSAULTRIFLE_MK2',
+	'WEAPON_CARBINERIFLE',
+	'WEAPON_CARBINERIFLE_MK2',
+	'WEAPON_ADVANCEDRIFLE',
+	'WEAPON_SPECIALCARBINE',
+	'WEAPON_BULLPUPRIFLE',
+	'WEAPON_COMPACTRIFLE',
+	'WEAPON_SPECIALCARBINE_MK2',
+	'WEAPON_BULLPUPRIFLE_MK2',
+	'WEAPON_PUMPSHOTGUN_MK2'
 }
 
 -- These weapons will have their reticle enabled
 Config.Weapons.Reticle = {
-	"WEAPON_SNIPERRIFLE",
-	"WEAPON_HEAVYSNIPER",
-	"WEAPON_HEAVYSNIPER_MK2",
-	"WEAPON_MARKSMANRIFLE",
-	"WEAPON_MARKSMANRIFLE_MK2",
-	"WEAPON_STUNGUN"
+	'WEAPON_SNIPERRIFLE',
+	'WEAPON_HEAVYSNIPER',
+	'WEAPON_HEAVYSNIPER_MK2',
+	'WEAPON_MARKSMANRIFLE',
+	'WEAPON_MARKSMANRIFLE_MK2',
+	'WEAPON_STUNGUN'
 }
 
 -- Effects that are randomly selected when the player takes any damage.
--- Pick and choose which effects using the list below. Remember to add ","s where needed.
+-- Pick and choose which effects using the list below. Remember to add ','s where needed.
 Config.BloodEffects = {
-	"Skin_Melee_0",
-	"Useful_Bits",
-	"Explosion_Med",
-	"BigHitByVehicle",
-	"Car_Crash_Heavy",
-	"HitByVehicle",
-	"BigRunOverByVehicle"
+	'Skin_Melee_0',
+	'Useful_Bits',
+	'Explosion_Med',
+	'BigHitByVehicle',
+	'Car_Crash_Heavy',
+	'HitByVehicle',
+	'BigRunOverByVehicle'
 }
 
 -- Blood Effects
@@ -131,7 +135,7 @@ FireMode.Reloading = false
 FireMode.Limp = -1
 
 -- When the player spawns (or respawns after death)
-AddEventHandler("playerSpawned", function ()
+AddEventHandler('playerSpawned', function ()
 	-- Remove all blood effects
 	-- Does no seems to work 100% of the time, reason unclear.
 	ClearPedBloodDamage(PlayerPedId())
@@ -158,7 +162,7 @@ Citizen.CreateThread(function()
 		if IsPedArmed(PlayerPed, 4) then
 			if not IsPedInAnyVehicle(PlayerPed, true) then
 				local PedWeapon = GetSelectedPedWeapon(PlayerPed)
-				-- Does this gun need to need affeced?
+				-- Does this gun need to need affected?
 				local Active = false
 
 				-- If last weapon used is not still in use
@@ -168,7 +172,7 @@ Citizen.CreateThread(function()
 						-- If weapon is in list
 						if GetHashKey(Weapon) == PedWeapon then
 							-- Set weapon type to semi-automatic
-							Active = "single"
+							Active = 'single'
 							break
 						end
 					end
@@ -180,7 +184,7 @@ Citizen.CreateThread(function()
 							-- If weapon is in list
 							if GetHashKey(Weapon) == PedWeapon then
 								-- Set weapon type to full
-								Active = "full"
+								Active = 'full'
 								break
 							end
 						end
@@ -193,7 +197,7 @@ Citizen.CreateThread(function()
 							-- If weapon is in list
 							if GetHashKey(Weapon) == PedWeapon then
 								-- Set weapon type to full
-								Active = "reticle"
+								Active = 'reticle'
 								break
 							end
 						end
@@ -217,7 +221,7 @@ Citizen.CreateThread(function()
 				end
 
 				-- If weapon needs to be affected
-				if Active and Active ~= "reticle" then
+				if Active and Active ~= 'reticle' then
 					-- Disable reload and pistol whip
 					DisableControlAction(0, 45, true)
 					DisableControlAction(0, 140, true)
@@ -236,34 +240,30 @@ Citizen.CreateThread(function()
 
 					-- If fire mode selector key pressed
 					if IsDisabledControlJustReleased(1, Config.SelectorKey) then
-						-- If gun is full mode
-						if Active == "full" then
-							-- If current fire mode is less then or equal to two
+						if Active == 'full' then
 							if FireMode.Weapons[PedWeapon] <= 2 then
-								-- Play click sound
-								PlaySoundFrontend(-1, "Faster_Click", "RESPAWN_ONLINE_SOUNDSET", 1)
-								-- Increase fire mode
+							    if FireMode.Weapons[PedWeapon] == 0 then
+							        NewNUIMessage('NewMode', 'single')
+								elseif FireMode.Weapons[PedWeapon] == 1 then
+									NewNUIMessage('NewMode', 'burst')
+								elseif FireMode.Weapons[PedWeapon] == 2 then
+									NewNUIMessage('NewMode', 'full_auto')
+							    end
+								PlaySoundFrontend(-1, 'Faster_Click', 'RESPAWN_ONLINE_SOUNDSET', 1)
 								FireMode.Weapons[PedWeapon] = FireMode.Weapons[PedWeapon] + 1
-							-- If current fire mode is more than or equal to 3
 							elseif FireMode.Weapons[PedWeapon] >= 3 then
-								-- Play safety click sound
-								PlaySoundFrontend(-1, "Reset_Prop_Position", "DLC_Dmod_Prop_Editor_Sounds", 0)
-								-- Set fire mode to safety
+								NewNUIMessage('NewMode', 'safety')
+								PlaySoundFrontend(-1, 'Reset_Prop_Position', 'DLC_Dmod_Prop_Editor_Sounds', 0)
 								FireMode.Weapons[PedWeapon] = 0
 							end
-						-- If gun is single mode
 						else
-							-- If fire mode is set to safety
 							if FireMode.Weapons[PedWeapon] == 0 then
-								-- Play click sound
-								PlaySoundFrontend(-1, "Faster_Click", "RESPAWN_ONLINE_SOUNDSET", 1)
-								-- Set fire mode to semi-automatic
+								NewNUIMessage('NewMode', 'safety')
+								PlaySoundFrontend(-1, 'Faster_Click', 'RESPAWN_ONLINE_SOUNDSET', 1)
 								FireMode.Weapons[PedWeapon] = FireMode.Weapons[PedWeapon] + 1
-							-- If fire mode is set to semi-automatic
 							elseif FireMode.Weapons[PedWeapon] >= 1 then
-								-- Play safety click sound
-								PlaySoundFrontend(-1, "Reset_Prop_Position", "DLC_Dmod_Prop_Editor_Sounds", 0)
-								-- Set fire mode to safety
+								NewNUIMessage('NewMode', 'single')
+								PlaySoundFrontend(-1, 'Reset_Prop_Position', 'DLC_Dmod_Prop_Editor_Sounds', 0)
 								FireMode.Weapons[PedWeapon] = 0
 							end
 						end
@@ -280,35 +280,28 @@ Citizen.CreateThread(function()
 						FireMode.Reloading = true
 						FireMode.ShootingDisable = true
 						if IsPlayerFreeAiming(PlayerId()) then
-							-- Force them to keep aiming
 							SetPlayerForcedAim(PlayerId(), true)
 						end
-						Citizen.Wait(350)
+						Citizen.Wait(400)
 						MakePedReload(PlayerPed)
-						Citizen.Wait(250)
-						-- Stop forcing the ped to aim
+						Citizen.Wait(300)
 						SetPlayerForcedAim(PlayerId(), false)
-						-- Enable shooting
 						FireMode.ShootingDisable = false
-						-- Disable currently reloading
 						FireMode.Reloading = false
 					-- If they is only one bullet left in the magazine
 					elseif Ammo == 1 then
-						-- Disable shooting
 						FireMode.ShootingDisable = true
 						-- Set the ammo in the magazine to one
 						SetAmmoInClip(PlayerPed, PedWeapon, 1)
 						-- If left click just pressed
 						if IsDisabledControlJustPressed(1, 24) then
-							-- Play empty magazine click sound
-							PlaySoundFrontend(-1, "Faster_Click", "RESPAWN_ONLINE_SOUNDSET", 1)
+							PlaySoundFrontend(-1, 'Faster_Click', 'RESPAWN_ONLINE_SOUNDSET', 1)
 						end
 					-- If left click just pressed
 					elseif IsDisabledControlJustPressed(1, 24) then
 						-- If the fire mode is set to safety
 						if FireMode.Weapons[PedWeapon] == 0 then
-							-- Play safety enabled click sound
-							PlaySoundFrontend(-1, "HACKING_MOVE_CURSOR", 0, 1)
+							PlaySoundFrontend(-1, 'HACKING_MOVE_CURSOR', 0, 1)
 						-- If fire mode is set to semi-automatic
 						elseif FireMode.Weapons[PedWeapon] == 1 then
 							-- While left click is still being held
@@ -329,7 +322,6 @@ Citizen.CreateThread(function()
 						end
 					-- If fire mode is not set to safety
 					elseif FireMode.Weapons[PedWeapon] ~= 0 then
-						-- Enable shooting
 						FireMode.ShootingDisable = false
 					end
 				-- If weapon is not in any list
@@ -340,11 +332,8 @@ Citizen.CreateThread(function()
 			end
 		-- If ped is not armed
 		else
-			-- Remove last weapon
 			FireMode.LastWeapon = false
-			-- Remove last weapon type
 			FireMode.LastWeaponActive = false
-			-- Enable shooting
 			FireMode.ShootingDisable = false
 		end
 
@@ -352,8 +341,7 @@ Citizen.CreateThread(function()
 end)
 
 -- Remove reticle loop
--- This is in it's own loop to stop flickering
--- caused by Citizen.Wait's in other loops.
+-- This is in it's own loop to stop flickering caused by Citizen.Wait's in other loops.
 Citizen.CreateThread(function()
 	while true do
 		Citizen.Wait(0)
@@ -361,7 +349,7 @@ Citizen.CreateThread(function()
 		-- Hide weapon icon
 		HideHudComponentThisFrame(2)
 		-- If weapon does not require reticle, remove reticle
-		if FireMode.LastWeaponActive ~= "reticle" then HideHudComponentThisFrame(14) end
+		if FireMode.LastWeaponActive ~= 'reticle' then HideHudComponentThisFrame(14) end
 		-- Hide weapon wheel stats
 		HideHudComponentThisFrame(20)
 		-- Hide hud weapons
@@ -400,9 +388,9 @@ Citizen.CreateThread(function()
 		if HasEntityBeenDamagedByAnyPed(PlayerPed) then
 			ClearEntityLastDamageEntity(PlayerPed)
 
-			if not HasAnimDictLoaded("move_m@injured") then
-				RequestAnimDict("move_m@injured")
-				while not HasAnimDictLoaded("move_m@injured") do
+			if not HasAnimDictLoaded('move_m@injured') then
+				RequestAnimDict('move_m@injured')
+				while not HasAnimDictLoaded('move_m@injured') do
 					Citizen.Wait(0)
 				end
 			end
@@ -412,7 +400,7 @@ Citizen.CreateThread(function()
 			-- Apply random effect to ped
 			ApplyPedDamagePack(PlayerPed, Effect, 0, 0)
 			-- Set limp
-			SetPedMovementClipset(PlayerPed, "move_m@injured", 5.0)
+			SetPedMovementClipset(PlayerPed, 'move_m@injured', 5.0)
 			-- Add random amount of limping time
 			FireMode.Limp = FireMode.Limp + math.random(100, 200)
 		end
@@ -432,3 +420,13 @@ Citizen.CreateThread(function()
 		end
 	end
 end)
+
+-- NUI function
+function NewNUIMessage (Type, Load)
+	if Config.SelectorImages then
+		SendNUIMessage({
+			PayloadType = Type,
+			Payload = Load
+		})
+	end
+end

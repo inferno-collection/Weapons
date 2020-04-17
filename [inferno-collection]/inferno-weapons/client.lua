@@ -1,4 +1,4 @@
--- Inferno Collection Weapons Version 1.2 Alpha
+-- Inferno Collection Weapons Version 1.21 Alpha
 --
 -- Copyright (c) 2019, Christopher M, Inferno Collection. All rights reserved.
 --
@@ -258,12 +258,12 @@ Citizen.CreateThread(function()
 							end
 						else
 							if FireMode.Weapons[PedWeapon] == 0 then
-								NewNUIMessage('NewMode', 'safety')
-								PlaySoundFrontend(-1, 'Faster_Click', 'RESPAWN_ONLINE_SOUNDSET', 1)
-								FireMode.Weapons[PedWeapon] = FireMode.Weapons[PedWeapon] + 1
-							elseif FireMode.Weapons[PedWeapon] >= 1 then
 								NewNUIMessage('NewMode', 'single')
 								PlaySoundFrontend(-1, 'Reset_Prop_Position', 'DLC_Dmod_Prop_Editor_Sounds', 0)
+								FireMode.Weapons[PedWeapon] = FireMode.Weapons[PedWeapon] + 1
+							elseif FireMode.Weapons[PedWeapon] >= 1 then
+								NewNUIMessage('NewMode', 'safety')
+								PlaySoundFrontend(-1, 'Faster_Click', 'RESPAWN_ONLINE_SOUNDSET', 1)
 								FireMode.Weapons[PedWeapon] = 0
 							end
 						end
@@ -369,6 +369,7 @@ Citizen.CreateThread(function()
 			DisableControlAction(0, 140, true)
 			DisableControlAction(0, 141, true)
 			DisableControlAction(0, 142, true)
+			DisableControlAction(0, 257, true)
 			DisableControlAction(0, 263, true)
 			DisableControlAction(0, 264, true)
 			-- Disable fire mode selector key

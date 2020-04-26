@@ -1,4 +1,4 @@
--- Inferno Collection Weapons Version 1.22 Alpha
+-- Inferno Collection Weapons Version 1.23 Alpha
 --
 -- Copyright (c) 2019-2020, Christopher M, Inferno Collection. All rights reserved.
 --
@@ -21,6 +21,10 @@ Config.SelectorKey = 26
 
 -- Whether or not to enable selector images when changing fire modes
 Config.SelectorImages = true
+
+-- Whether weapons should start on Safety or semi-automatic
+-- true = Weapons start on Safety, false = weapons start on semi-automatic
+Config.StartSafe = true
 
 -- Weapons variables
 --
@@ -234,7 +238,11 @@ Citizen.CreateThread(function()
 					-- If weapon is not yet logged
 					if FireMode.Weapons[PedWeapon] == nil then
 						-- Log to array
-						FireMode.Weapons[PedWeapon] = 0
+						if Config.StartSafe then
+							FireMode.Weapons[PedWeapon] = 0
+						else
+							FireMode.Weapons[PedWeapon] = 1
+						end
 					end
 
 					-- If fire mode selector key pressed

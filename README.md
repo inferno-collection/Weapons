@@ -12,7 +12,7 @@ Presently, the following can be customized:
 - Which blood effects are used.
 
 ***
-### Development Showcase Video (Showing Version 1.21 Beta)
+### Development Showcase Video (Showing Version 1.22 Alpha)
 [![Watch the Development Showcase video](https://img.youtube.com/vi/NdxUMO0YIJE/maxresdefault.jpg)](https://www.youtube.com/watch?v=NdxUMO0YIJE)
 
 > The Inferno Collection Team

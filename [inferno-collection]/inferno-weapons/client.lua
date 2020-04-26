@@ -1,4 +1,4 @@
--- Inferno Collection Weapons Version 1.21 Beta
+-- Inferno Collection Weapons Version 1.22 Alpha
 --
 -- Copyright (c) 2019-2020, Christopher M, Inferno Collection. All rights reserved.
 --
@@ -39,7 +39,6 @@ Config.Weapons.Single = {
 	'WEAPON_SNSPISTOL',
 	'WEAPON_HEAVYPISTOL',
 	'WEAPON_VINTAGEPISTOL',
-	'WEAPON_MARKSMANPISTOL',
 	'WEAPON_PUMPSHOTGUN',
 	'WEAPON_SNSPISTOL_MK2',
 	'WEAPON_REVOLVER_MK2'
@@ -289,7 +288,8 @@ Citizen.CreateThread(function()
 						FireMode.ShootingDisable = false
 						FireMode.Reloading = false
 					-- If they is only one bullet left in the magazine
-					elseif Ammo == 1 then
+					-- Or if the firemode is burst, and out of ammo
+					elseif (Ammo == 1 and FireMode.Weapons[PedWeapon] ~= 2) or (Ammo <= 3 and FireMode.Weapons[PedWeapon] == 2) then
 						FireMode.ShootingDisable = true
 						-- Set the ammo in the magazine to one
 						SetAmmoInClip(PlayerPed, PedWeapon, 1)

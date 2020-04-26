@@ -4,12 +4,12 @@
 
 __Public Alpha Version 1.23__
 
-Adds fire modes to the weapons of your choice, as well as more realistic reloads (including disabling automatic reloads), more blood when injured, and limping after being injured.
+Adds fire modes to the weapons of your choice, as well as more realistic reloads (including disabling automatic reloads), consistent flashlights (stay turned on even when weapon is not being aimed), more blood when injured, and limping after being injured.
 
 Presently, the following can be customized:
 - Which weapons have what fire mode.
 - Which weapons do and do not have a reticle.
-- Whether weapons should start on Saftey or semi-automatic
+- Whether weapons should start on Safety or semi-automatic
 - Which blood effects are used.
 
 ***

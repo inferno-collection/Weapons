@@ -8,27 +8,25 @@
 -- THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. THE SOFTWARE MAY NOT BE SOLD.
 --
 
-name 'Weapons - Inferno Collection'
+--
+--		Nothing past this point needs to be edited, all the settings for the resource are found ABOVE this line.
+--		Do not make changes below this line unless you know what you are doing!
+--
 
-description 'Adds fire modes to the weapons of your choice, as well as more realistic reloads (including disabling automatic reloads), more blood when injured, and limping after being injured.'
+-- Master Flashlight storage variable
+local Flashlights = {}
 
-author 'Inferno Collection (inferno-collection.com)'
+-- Adds new flashlight request to array
+RegisterServerEvent('Weapons:Server:New')
+AddEventHandler('Weapons:Server:New', function(x1, y1, z1, x2, y2, z2) Flashlights[source] = {x1, y1, z1, x2, y2, z2} end)
 
-version '1.24 Alpha'
+Citizen.CreateThread(function()
+    while true do
+        Citizen.Wait(0)
 
-url 'https://inferno-collection.com'
-
-client_script 'client.lua'
-
-server_script 'server.lua'
-
-files {
-    'nui.html',
-    'images/*.png'
-}
-
-ui_page 'nui.html'
-
-game 'gta5'
-
-fx_version 'bodacious'
+        -- Updates all clients for this tick
+        TriggerClientEvent('Weapons:Client:Return', -1, Flashlights)
+        -- Clears the variable ready to be updated next tick
+        Flashlights = {}
+    end
+end)

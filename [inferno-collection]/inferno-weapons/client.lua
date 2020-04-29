@@ -1,4 +1,4 @@
--- Inferno Collection Weapons Version 1.24 Alpha
+-- Inferno Collection Weapons Version 1.25 Alpha
 --
 -- Copyright (c) 2019-2020, Christopher M, Inferno Collection. All rights reserved.
 --
@@ -426,29 +426,18 @@ Citizen.CreateThread(function()
 			local RemovedFlashlight = true
 
 			-- Loop though all flashlights
-			for Flashlight, Vectors in pairs(FlashlightHashes) do
+			for Flashlight, _ in pairs(FlashlightHashes) do
 				-- If weapon has flashlight
 				if HasPedGotWeaponComponent(PlayerPed, FireMode.LastWeapon, GetHashKey(Flashlight)) then
-					if not FireMode.WeaponFlashlights[FireMode.LastWeapon] then FireMode.WeaponFlashlights[FireMode.LastWeapon] = {Vectors, false} end
+					if not FireMode.WeaponFlashlights[FireMode.LastWeapon] then FireMode.WeaponFlashlights[FireMode.LastWeapon] = {Flashlight, false} end
 					RemovedFlashlight = false
 					break
 				end
 			end
 
-			if RemovedFlashlight then FireMode.WeaponFlashlights[FireMode.LastWeapon] = nil end
-
-			-- If weapon had a flashlight and it's turned on
-			if FireMode.WeaponFlashlights[FireMode.LastWeapon] and FireMode.WeaponFlashlights[FireMode.LastWeapon][2] then
-				TriggerServerEvent(
-					'Weapons:Server:New',
-					-- Sent like this since Vector3's cannot be sent though events
-					FireMode.WeaponFlashlights[FireMode.LastWeapon][1][1].x,
-					FireMode.WeaponFlashlights[FireMode.LastWeapon][1][1].y,
-					FireMode.WeaponFlashlights[FireMode.LastWeapon][1][1].z,
-					FireMode.WeaponFlashlights[FireMode.LastWeapon][1][2].x,
-					FireMode.WeaponFlashlights[FireMode.LastWeapon][1][2].y,
-					FireMode.WeaponFlashlights[FireMode.LastWeapon][1][2].z
-				)
+			if RemovedFlashlight then
+				FireMode.WeaponFlashlights[FireMode.LastWeapon] = nil
+				TriggerServerEvent('Weapons:Server:Toggle', false)
 			end
 
 			-- If E just pressed
@@ -456,6 +445,10 @@ Citizen.CreateThread(function()
 				if FireMode.WeaponFlashlights[FireMode.LastWeapon] then
 					-- Toggle flashlight
 					FireMode.WeaponFlashlights[FireMode.LastWeapon][2] = not FireMode.WeaponFlashlights[FireMode.LastWeapon][2]
+					TriggerServerEvent('Weapons:Server:Toggle',
+						FireMode.WeaponFlashlights[FireMode.LastWeapon][2],
+						FireMode.WeaponFlashlights[FireMode.LastWeapon][1]
+					)
 					PlaySoundFrontend(-1, 'COMPUTERS_MOUSE_CLICK', 0, 1)
 				end
 			end
@@ -469,17 +462,27 @@ Citizen.CreateThread(function()
 		Citizen.Wait(0)
 
 		-- Loop though all player flashlights
-		for Source, Vectors in pairs(AllFlashlights) do
-			local SourcePlayer = GetPlayerFromServerId(Source)
-			local SourcePed = GetPlayerPed(SourcePlayer)
-			local FlashlightVectors = {vector3(Vectors[1], Vectors[2], Vectors[3]), vector3(Vectors[4], Vectors[5], Vectors[6])}
-			local FlashlightPosition = GetPedBoneCoords(SourcePed, 0xDEAD, FlashlightVectors[1])
-			local FlashlightDirection = GetPedBoneCoords(SourcePed, 0xDEAD, FlashlightVectors[2])
-			local DirectionVector = FlashlightDirection - FlashlightPosition
-			local VectorMagnitude = Vmag2(DirectionVector)
-			local FlashlightEndPosition = vector3(DirectionVector.x / VectorMagnitude, DirectionVector.y / VectorMagnitude, DirectionVector.z / VectorMagnitude)
+		for Source, Flashlight in pairs(AllFlashlights) do
+			if Source then
+				local SourcePlayer = GetPlayerFromServerId(Source)
+				if SourcePlayer then
+					local SourcePed = GetPlayerPed(SourcePlayer)
+					if SourcePed then
+						local FlashlightVectors = FlashlightHashes[Flashlight]
+						local FlashlightPosition = GetPedBoneCoords(SourcePed, 0xDEAD, FlashlightVectors[1])
+						local FlashlightDirection = GetPedBoneCoords(SourcePed, 0xDEAD, FlashlightVectors[2])
+						local DirectionVector = FlashlightDirection - FlashlightPosition
+						local VectorMagnitude = Vmag2(DirectionVector)
+						local FlashlightEndPosition = vector3(
+							DirectionVector.x / VectorMagnitude,
+							DirectionVector.y / VectorMagnitude,
+							DirectionVector.z / VectorMagnitude
+						)
 
-			DrawSpotLight(FlashlightPosition, FlashlightEndPosition, 255, 255, 255, 20.0, 2.0, 2.0, 10.0, 15.0)
+						DrawSpotLight(FlashlightPosition, FlashlightEndPosition, 255, 255, 255, 40.0, 2.0, 2.0, 10.0, 15.0)
+					end
+				end
+			end
 		end
 	end
 end)

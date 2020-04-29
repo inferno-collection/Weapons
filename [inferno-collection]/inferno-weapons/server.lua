@@ -1,4 +1,4 @@
--- Inferno Collection Weapons Version 1.24 Alpha
+-- Inferno Collection Weapons Version 1.25 Alpha
 --
 -- Copyright (c) 2019-2020, Christopher M, Inferno Collection. All rights reserved.
 --
@@ -16,9 +16,15 @@
 -- Master Flashlight storage variable
 local Flashlights = {}
 
--- Adds new flashlight request to array
-RegisterServerEvent('Weapons:Server:New')
-AddEventHandler('Weapons:Server:New', function(x1, y1, z1, x2, y2, z2) Flashlights[source] = {x1, y1, z1, x2, y2, z2} end)
+-- Toggle client flashlight status
+RegisterServerEvent('Weapons:Server:Toggle')
+AddEventHandler('Weapons:Server:Toggle', function(bool, flashlight)
+    if bool then
+        Flashlights[source] = flashlight
+    else
+        Flashlights[source] = nil
+    end
+end)
 
 Citizen.CreateThread(function()
     while true do
@@ -26,7 +32,5 @@ Citizen.CreateThread(function()
 
         -- Updates all clients for this tick
         TriggerClientEvent('Weapons:Client:Return', -1, Flashlights)
-        -- Clears the variable ready to be updated next tick
-        Flashlights = {}
     end
 end)

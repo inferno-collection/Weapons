@@ -1,4 +1,4 @@
--- Inferno Collection Weapons Version 1.24 Alpha
+-- Inferno Collection Weapons Version 1.25 Alpha
 --
 -- Copyright (c) 2019-2020, Christopher M, Inferno Collection. All rights reserved.
 --
@@ -14,7 +14,7 @@ description 'Adds fire modes to the weapons of your choice, as well as more real
 
 author 'Inferno Collection (inferno-collection.com)'
 
-version '1.24 Alpha'
+version '1.25 Alpha'
 
 url 'https://inferno-collection.com'
 

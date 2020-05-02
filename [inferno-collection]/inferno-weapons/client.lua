@@ -1,4 +1,4 @@
--- Inferno Collection Weapons Version 1.25 Alpha
+-- Inferno Collection Weapons Version 1.26 Alpha
 --
 -- Copyright (c) 2019-2020, Christopher M, Inferno Collection. All rights reserved.
 --
@@ -122,7 +122,7 @@ Config.BloodEffects = {
 --		Do not make changes below this line unless you know what you are doing!
 --
 
--- Local fire mode variables
+-- Fire mode variables
 local FireMode = {}
 -- Weapons the client currently has
 FireMode.Weapons = {}
@@ -139,8 +139,12 @@ FireMode.Reloading = false
 -- Amount of time to limp for
 FireMode.Limp = -1
 
+-- Flashlight variables
+local Flashlights = {}
+-- All flashlights from all players, synced
+Flashlights.All = {}
 -- Flashlight compnent IDs and position vectors
-local FlashlightHashes = {
+Flashlights.Hashes = {
 	COMPONENT_AT_AR_FLSH = {
 		vector3(0.5, 0.03, 0.05),
 		vector3(1.0, -0.16, 0.145)
@@ -156,11 +160,8 @@ local FlashlightHashes = {
 	COMPONENT_AT_PI_FLSH_03 = {
 		vector3(0.28, 0.04, 0.0),
 		vector3(1.0, -0.135, 0.03)
-	},
+	}
 }
-
--- All flashlights from all players, synced
-local AllFlashlights = {}
 
 -- When the player spawns (or respawns after death)
 AddEventHandler('playerSpawned', function ()
@@ -177,6 +178,9 @@ AddEventHandler('playerSpawned', function ()
 	FireMode.LastWeapon = false
 	-- Remove last weapon type
 	FireMode.LastWeaponActive = false
+	-- Remove all active flashlights
+	TriggerServerEvent('Weapons:Server:Toggle', false)
+	FireMode.WeaponFlashlights = {}
 end)
 
 -- Resource master loop
@@ -415,7 +419,7 @@ Citizen.CreateThread(function()
 	end
 end)
 
--- Toggle Flashlight Loop
+-- Toggle Weapon Flashlight Loop
 Citizen.CreateThread(function()
 	while true do
 		Citizen.Wait(0)
@@ -426,10 +430,18 @@ Citizen.CreateThread(function()
 			local RemovedFlashlight = true
 
 			-- Loop though all flashlights
-			for Flashlight, _ in pairs(FlashlightHashes) do
+			for Flashlight, _ in pairs(Flashlights.Hashes) do
 				-- If weapon has flashlight
 				if HasPedGotWeaponComponent(PlayerPed, FireMode.LastWeapon, GetHashKey(Flashlight)) then
-					if not FireMode.WeaponFlashlights[FireMode.LastWeapon] then FireMode.WeaponFlashlights[FireMode.LastWeapon] = {Flashlight, false} end
+					if not FireMode.WeaponFlashlights[FireMode.LastWeapon] then
+						FireMode.WeaponFlashlights[FireMode.LastWeapon] = {Flashlight, false }
+					elseif FireMode.WeaponFlashlights[FireMode.LastWeapon][2] then
+						TriggerServerEvent('Weapons:Server:Toggle',
+							FireMode.WeaponFlashlights[FireMode.LastWeapon][2],
+							FireMode.WeaponFlashlights[FireMode.LastWeapon][1],
+							FireMode.LastWeapon
+						)
+					end
 					RemovedFlashlight = false
 					break
 				end
@@ -447,7 +459,8 @@ Citizen.CreateThread(function()
 					FireMode.WeaponFlashlights[FireMode.LastWeapon][2] = not FireMode.WeaponFlashlights[FireMode.LastWeapon][2]
 					TriggerServerEvent('Weapons:Server:Toggle',
 						FireMode.WeaponFlashlights[FireMode.LastWeapon][2],
-						FireMode.WeaponFlashlights[FireMode.LastWeapon][1]
+						FireMode.WeaponFlashlights[FireMode.LastWeapon][1],
+						FireMode.LastWeapon
 					)
 					PlaySoundFrontend(-1, 'COMPUTERS_MOUSE_CLICK', 0, 1)
 				end
@@ -462,24 +475,29 @@ Citizen.CreateThread(function()
 		Citizen.Wait(0)
 
 		-- Loop though all player flashlights
-		for Source, Flashlight in pairs(AllFlashlights) do
+		for Source, Pack in pairs(Flashlights.All) do
+			local Flashlight = Pack[1]
+			local Weapon = Pack[2]
+
 			if Source then
 				local SourcePlayer = GetPlayerFromServerId(Source)
 				if SourcePlayer then
 					local SourcePed = GetPlayerPed(SourcePlayer)
 					if SourcePed then
-						local FlashlightVectors = FlashlightHashes[Flashlight]
-						local FlashlightPosition = GetPedBoneCoords(SourcePed, 0xDEAD, FlashlightVectors[1])
-						local FlashlightDirection = GetPedBoneCoords(SourcePed, 0xDEAD, FlashlightVectors[2])
-						local DirectionVector = FlashlightDirection - FlashlightPosition
-						local VectorMagnitude = Vmag2(DirectionVector)
-						local FlashlightEndPosition = vector3(
-							DirectionVector.x / VectorMagnitude,
-							DirectionVector.y / VectorMagnitude,
-							DirectionVector.z / VectorMagnitude
-						)
+						if GetSelectedPedWeapon(SourcePed) == Weapon then
+							local FlashlightVectors = Flashlights.Hashes[Flashlight]
+							local FlashlightPosition = GetPedBoneCoords(SourcePed, 0xDEAD, FlashlightVectors[1])
+							local FlashlightDirection = GetPedBoneCoords(SourcePed, 0xDEAD, FlashlightVectors[2])
+							local DirectionVector = FlashlightDirection - FlashlightPosition
+							local VectorMagnitude = Vmag2(DirectionVector)
+							local FlashlightEndPosition = vector3(
+								DirectionVector.x / VectorMagnitude,
+								DirectionVector.y / VectorMagnitude,
+								DirectionVector.z / VectorMagnitude
+							)
 
-						DrawSpotLight(FlashlightPosition, FlashlightEndPosition, 255, 255, 255, 40.0, 2.0, 2.0, 10.0, 15.0)
+							DrawSpotLight(FlashlightPosition, FlashlightEndPosition, 255, 255, 255, 40.0, 2.0, 2.0, 10.0, 15.0)
+						end
 					end
 				end
 			end
@@ -531,7 +549,7 @@ end)
 
 -- Updates the synced flashliught variable
 RegisterNetEvent('Weapons:Client:Return')
-AddEventHandler('Weapons:Client:Return', function(Flashlights) AllFlashlights = Flashlights end)
+AddEventHandler('Weapons:Client:Return', function(NewFlashlights) Flashlights.All = NewFlashlights end)
 
 -- NUI function
 function NewNUIMessage (Type, Load)

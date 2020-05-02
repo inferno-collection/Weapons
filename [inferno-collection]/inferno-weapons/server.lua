@@ -1,4 +1,4 @@
--- Inferno Collection Weapons Version 1.25 Alpha
+-- Inferno Collection Weapons Version 1.26 Alpha
 --
 -- Copyright (c) 2019-2020, Christopher M, Inferno Collection. All rights reserved.
 --
@@ -15,6 +15,11 @@
 
 -- Master Flashlight storage variable
 local Flashlights = {}
+
+-- Remove flashlights of players who are no longer in server
+AddEventHandler('playerDropped', function ()
+    if Flashlights[source] then Flashlights[source] = nil end
+end)
 
 -- Toggle client flashlight status
 RegisterServerEvent('Weapons:Server:Toggle')

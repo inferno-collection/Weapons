@@ -436,7 +436,7 @@ Citizen.CreateThread(function()
 							FireMode.LastWeapon
 						)
 					end
-					
+
 					RemovedFlashlight = false
 					break
 				end

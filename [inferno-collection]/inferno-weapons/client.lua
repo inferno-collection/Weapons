@@ -1,4 +1,4 @@
--- Inferno Collection Weapons Version 1.26 Beta
+-- Inferno Collection Weapons Version 1.27 Alpha
 --
 -- Copyright (c) 2019-2020, Christopher M, Inferno Collection. All rights reserved.
 --
@@ -17,7 +17,7 @@ local Config = {} -- Do not edit this line
 
 -- The ID of the key used to change fire mode
 -- https://docs.fivem.net/game-references/controls/
-Config.SelectorKey = 26
+Config.SelectorKey = 319
 
 -- Whether or not to enable selector images when changing fire modes
 Config.SelectorImages = true
@@ -255,17 +255,6 @@ Citizen.CreateThread(function()
 
 				-- If weapon needs to be affected
 				if Active and Active ~= 'reticle' then
-					-- Disable reload and pistol whip
-					DisableControlAction(0, 45, true)
-					DisableControlAction(0, 54, true)
-					DisableControlAction(0, 140, true)
-					DisableControlAction(0, 141, true)
-					DisableControlAction(0, 142, true)
-					DisableControlAction(0, 263, true)
-					DisableControlAction(0, 264, true)
-					-- Disable fire mode selector key
-					DisableControlAction(0, Config.SelectorKey, true)
-
 					-- If weapon is not yet logged
 					if FireMode.Weapons[PedWeapon] == nil then
 						-- Log to array
@@ -413,6 +402,27 @@ Citizen.CreateThread(function()
 	end
 end)
 
+-- Disable controls while using weapon
+Citizen.CreateThread(function()
+	while true do
+		Citizen.Wait(0)
+
+		if FireMode.LastWeapon and FireMode.LastWeaponActive ~= 'reticle' then
+			-- Disable reload and pistol whip
+			DisableControlAction(0, 45, true)
+			DisableControlAction(0, 54, true)
+			DisableControlAction(0, 140, true)
+			DisableControlAction(0, 141, true)
+			DisableControlAction(0, 142, true)
+			DisableControlAction(0, 263, true)
+			DisableControlAction(0, 264, true)
+			-- Disable fire mode selector key
+			DisableControlAction(0, Config.SelectorKey, true)
+		end
+
+	end
+end)
+
 -- Toggle Weapon Flashlight Loop
 Citizen.CreateThread(function()
 	while true do
@@ -458,6 +468,9 @@ Citizen.CreateThread(function()
 						FireMode.LastWeapon
 					)
 					PlaySoundFrontend(-1, 'COMPUTERS_MOUSE_CLICK', 0, 1)
+
+					-- Stops spamming the button, causing network issues
+					Citizen.Wait(250)
 				end
 			end
 		end

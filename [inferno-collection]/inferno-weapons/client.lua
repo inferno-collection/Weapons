@@ -1,4 +1,4 @@
--- Inferno Collection Weapons Version 1.21 Beta
+-- Inferno Collection Weapons Version 1.26 Beta
 --
 -- Copyright (c) 2019-2020, Christopher M, Inferno Collection. All rights reserved.
 --
@@ -22,6 +22,10 @@ Config.SelectorKey = 26
 -- Whether or not to enable selector images when changing fire modes
 Config.SelectorImages = true
 
+-- Whether weapons should start on Safety or semi-automatic
+-- true = Weapons start on Safety, false = weapons start on semi-automatic
+Config.StartSafe = true
+
 -- Weapons variables
 --
 -- Do not place a weapon in more than one list, or you may experience unexpected behaviour.
@@ -39,7 +43,6 @@ Config.Weapons.Single = {
 	'WEAPON_SNSPISTOL',
 	'WEAPON_HEAVYPISTOL',
 	'WEAPON_VINTAGEPISTOL',
-	'WEAPON_MARKSMANPISTOL',
 	'WEAPON_PUMPSHOTGUN',
 	'WEAPON_SNSPISTOL_MK2',
 	'WEAPON_REVOLVER_MK2'
@@ -119,10 +122,12 @@ Config.BloodEffects = {
 --		Do not make changes below this line unless you know what you are doing!
 --
 
--- Local fire mode variables
+-- Fire mode variables
 local FireMode = {}
 -- Weapons the client currently has
 FireMode.Weapons = {}
+-- Weapons the client currently has with flashlights on
+FireMode.WeaponFlashlights = {}
 -- Last weapon in use
 FireMode.LastWeapon = false
 -- Last weapon type in use
@@ -133,6 +138,30 @@ FireMode.ShootingDisable = false
 FireMode.Reloading = false
 -- Amount of time to limp for
 FireMode.Limp = -1
+
+-- Flashlight variables
+local Flashlights = {}
+-- All flashlights from all players, synced
+Flashlights.All = {}
+-- Flashlight compnent IDs and position vectors
+Flashlights.Hashes = {
+	COMPONENT_AT_AR_FLSH = {
+		vector3(0.5, 0.03, 0.05),
+		vector3(1.0, -0.16, 0.145)
+	},
+	COMPONENT_AT_PI_FLSH = {
+		vector3(0.28, 0.04, 0.0),
+		vector3(1.0, -0.12, 0.03)
+	},
+	COMPONENT_AT_PI_FLSH_02 = {
+		vector3(0.28, 0.04, 0.0),
+		vector3(1.0, -0.135, 0.03)
+	},
+	COMPONENT_AT_PI_FLSH_03 = {
+		vector3(0.28, 0.04, 0.0),
+		vector3(1.0, -0.135, 0.03)
+	}
+}
 
 -- When the player spawns (or respawns after death)
 AddEventHandler('playerSpawned', function ()
@@ -149,6 +178,9 @@ AddEventHandler('playerSpawned', function ()
 	FireMode.LastWeapon = false
 	-- Remove last weapon type
 	FireMode.LastWeaponActive = false
+	-- Remove all active local flashlights
+	TriggerServerEvent('Weapons:Server:Toggle', false)
+	FireMode.WeaponFlashlights = {}
 end)
 
 -- Resource master loop
@@ -157,6 +189,7 @@ Citizen.CreateThread(function()
 		Citizen.Wait(0)
 
 		local PlayerPed = PlayerPedId()
+		local PlayerId = PlayerId()
 
 		-- Is the player armed with any gun
 		if IsPedArmed(PlayerPed, 4) then
@@ -224,6 +257,7 @@ Citizen.CreateThread(function()
 				if Active and Active ~= 'reticle' then
 					-- Disable reload and pistol whip
 					DisableControlAction(0, 45, true)
+					DisableControlAction(0, 54, true)
 					DisableControlAction(0, 140, true)
 					DisableControlAction(0, 141, true)
 					DisableControlAction(0, 142, true)
@@ -235,7 +269,11 @@ Citizen.CreateThread(function()
 					-- If weapon is not yet logged
 					if FireMode.Weapons[PedWeapon] == nil then
 						-- Log to array
-						FireMode.Weapons[PedWeapon] = 0
+						if Config.StartSafe then
+							FireMode.Weapons[PedWeapon] = 0
+						else
+							FireMode.Weapons[PedWeapon] = 1
+						end
 					end
 
 					-- If fire mode selector key pressed
@@ -270,33 +308,28 @@ Citizen.CreateThread(function()
 					end
 
 					-- If fire mode is set to safety
-					if FireMode.Weapons[PedWeapon] == 0 then
-						FireMode.ShootingDisable = true
-					end
+					if FireMode.Weapons[PedWeapon] == 0 then FireMode.ShootingDisable = true end
 
 					local _, Ammo = GetAmmoInClip(PlayerPed, PedWeapon)
 					-- If R was just pressed and client is not already reloading
 					if IsDisabledControlJustPressed(1, 45) and not FireMode.Reloading then
 						FireMode.Reloading = true
 						FireMode.ShootingDisable = true
-						if IsPlayerFreeAiming(PlayerId()) then
-							SetPlayerForcedAim(PlayerId(), true)
-						end
+						if IsPlayerFreeAiming(PlayerId) then SetPlayerForcedAim(PlayerId, true) end
 						Citizen.Wait(400)
 						MakePedReload(PlayerPed)
 						Citizen.Wait(300)
-						SetPlayerForcedAim(PlayerId(), false)
+						SetPlayerForcedAim(PlayerId, false)
 						FireMode.ShootingDisable = false
 						FireMode.Reloading = false
 					-- If they is only one bullet left in the magazine
-					elseif Ammo == 1 then
+					-- Or if the firemode is burst, and out of ammo
+					elseif (Ammo == 1 and FireMode.Weapons[PedWeapon] ~= 2) or (Ammo <= 3 and FireMode.Weapons[PedWeapon] == 2) then
 						FireMode.ShootingDisable = true
 						-- Set the ammo in the magazine to one
 						SetAmmoInClip(PlayerPed, PedWeapon, 1)
 						-- If left click just pressed
-						if IsDisabledControlJustPressed(1, 24) then
-							PlaySoundFrontend(-1, 'Faster_Click', 'RESPAWN_ONLINE_SOUNDSET', 1)
-						end
+						if IsDisabledControlJustPressed(1, 24) then PlaySoundFrontend(-1, 'Faster_Click', 'RESPAWN_ONLINE_SOUNDSET', 1) end
 					-- If left click just pressed
 					elseif IsDisabledControlJustPressed(1, 24) then
 						-- If the fire mode is set to safety
@@ -307,7 +340,7 @@ Citizen.CreateThread(function()
 							-- While left click is still being held
 							while IsDisabledControlPressed(1, 24) do
 								-- Disable shooting (which allows for one shot to be fired)
-								DisablePlayerFiring(PlayerId(), true)
+								DisablePlayerFiring(PlayerId, true)
 								Citizen.Wait(0)
 							end
 						-- If fire mode is set to burst
@@ -316,7 +349,7 @@ Citizen.CreateThread(function()
 							-- While left click is still being held
 							while IsDisabledControlPressed(1, 24) do
 								-- Disable shooting
-								DisablePlayerFiring(PlayerId(), true)
+								DisablePlayerFiring(PlayerId, true)
 								Citizen.Wait(0)
 							end
 						end
@@ -380,6 +413,93 @@ Citizen.CreateThread(function()
 	end
 end)
 
+-- Toggle Weapon Flashlight Loop
+Citizen.CreateThread(function()
+	while true do
+		Citizen.Wait(0)
+
+		-- If player has a weapon
+		if FireMode.LastWeapon then
+			local PlayerPed = PlayerPedId()
+			local RemovedFlashlight = true
+
+			-- Loop though all flashlights
+			for Flashlight, _ in pairs(Flashlights.Hashes) do
+				-- If weapon has flashlight
+				if HasPedGotWeaponComponent(PlayerPed, FireMode.LastWeapon, GetHashKey(Flashlight)) then
+					if not FireMode.WeaponFlashlights[FireMode.LastWeapon] then
+						FireMode.WeaponFlashlights[FireMode.LastWeapon] = {Flashlight, false }
+					elseif FireMode.WeaponFlashlights[FireMode.LastWeapon][2] then
+						TriggerServerEvent('Weapons:Server:Toggle',
+							FireMode.WeaponFlashlights[FireMode.LastWeapon][2],
+							FireMode.WeaponFlashlights[FireMode.LastWeapon][1],
+							FireMode.LastWeapon
+						)
+					end
+
+					RemovedFlashlight = false
+					break
+				end
+			end
+
+			if RemovedFlashlight then
+				FireMode.WeaponFlashlights[FireMode.LastWeapon] = nil
+				TriggerServerEvent('Weapons:Server:Toggle', false)
+			end
+
+			-- If E just pressed
+			if IsDisabledControlJustPressed(0, 54) then
+				if FireMode.WeaponFlashlights[FireMode.LastWeapon] then
+					-- Toggle flashlight
+					FireMode.WeaponFlashlights[FireMode.LastWeapon][2] = not FireMode.WeaponFlashlights[FireMode.LastWeapon][2]
+					TriggerServerEvent('Weapons:Server:Toggle',
+						FireMode.WeaponFlashlights[FireMode.LastWeapon][2],
+						FireMode.WeaponFlashlights[FireMode.LastWeapon][1],
+						FireMode.LastWeapon
+					)
+					PlaySoundFrontend(-1, 'COMPUTERS_MOUSE_CLICK', 0, 1)
+				end
+			end
+		end
+	end
+end)
+
+-- Synced Flashlight loop
+Citizen.CreateThread(function()
+	while true do
+		Citizen.Wait(0)
+
+		-- Loop though all player flashlights
+		for Source, Pack in pairs(Flashlights.All) do
+			local Flashlight = Pack[1]
+			local Weapon = Pack[2]
+
+			if Source then
+				local SourcePlayer = GetPlayerFromServerId(Source)
+				if SourcePlayer then
+					local SourcePed = GetPlayerPed(SourcePlayer)
+					if SourcePed then
+						if GetSelectedPedWeapon(SourcePed) == Weapon then
+							local FlashlightVectors = Flashlights.Hashes[Flashlight]
+							local FlashlightPosition = GetPedBoneCoords(SourcePed, 0xDEAD, FlashlightVectors[1])
+							local FlashlightDirection = GetPedBoneCoords(SourcePed, 0xDEAD, FlashlightVectors[2])
+							local DirectionVector = FlashlightDirection - FlashlightPosition
+							local VectorMagnitude = Vmag2(DirectionVector)
+							local FlashlightEndPosition = vector3(
+								DirectionVector.x / VectorMagnitude,
+								DirectionVector.y / VectorMagnitude,
+								DirectionVector.z / VectorMagnitude
+							)
+
+							DrawSpotLight(FlashlightPosition, FlashlightEndPosition, 255, 255, 255, 40.0, 2.0, 2.0, 10.0, 15.0)
+						end
+					end
+				end
+			end
+		end
+	end
+end)
+
 -- Injury loop
 Citizen.CreateThread(function()
 	while true do
@@ -420,6 +540,12 @@ Citizen.CreateThread(function()
 			FireMode.Limp = -1
 		end
 	end
+end)
+
+-- Updates the synced flashliught variable
+RegisterNetEvent('Weapons:Client:Return')
+AddEventHandler('Weapons:Client:Return', function(NewFlashlights)
+	Flashlights.All = NewFlashlights
 end)
 
 -- NUI function

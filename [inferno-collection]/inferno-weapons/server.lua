@@ -8,27 +8,34 @@
 -- THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. THE SOFTWARE MAY NOT BE SOLD.
 --
 
-name 'Weapons - Inferno Collection'
+--
+--		Nothing past this point needs to be edited, all the settings for the resource are found ABOVE this line.
+--		Do not make changes below this line unless you know what you are doing!
+--
 
-description 'Adds fire modes to the weapons of your choice, as well as more realistic reloads (including disabling automatic reloads), consistent flashlights (stay turned on even when weapon is not being aimed), more blood when injured, and limping after being injured.'
+-- Master Flashlight storage variable
+local Flashlights = {}
 
-author 'Inferno Collection (inferno-collection.com)'
+-- Remove flashlights of players who are no longer in server
+AddEventHandler('playerDropped', function ()
+    if Flashlights[source] then Flashlights[source] = nil end
+end)
 
-version '1.26 Beta'
+-- Toggle client flashlight status
+RegisterServerEvent('Weapons:Server:Toggle')
+AddEventHandler('Weapons:Server:Toggle', function(bool, flashlight, weapon)
+    if bool then
+        Flashlights[source] = {flashlight, weapon}
+    else
+        Flashlights[source] = nil
+    end
+end)
 
-url 'https://inferno-collection.com'
+Citizen.CreateThread(function()
+    while true do
+        Citizen.Wait(0)
 
-client_script 'client.lua'
-
-server_script 'server.lua'
-
-files {
-    'nui.html',
-    'images/*.png'
-}
-
-ui_page 'nui.html'
-
-game 'gta5'
-
-fx_version 'bodacious'
+        -- Updates all clients for this tick
+        TriggerClientEvent('Weapons:Client:Return', -1, Flashlights)
+    end
+end)

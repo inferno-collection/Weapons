@@ -1,4 +1,4 @@
--- Inferno Collection Weapons Version 1.26 Alpha
+-- Inferno Collection Weapons Version 1.26 Beta
 --
 -- Copyright (c) 2019-2020, Christopher M, Inferno Collection. All rights reserved.
 --
@@ -23,9 +23,9 @@ end)
 
 -- Toggle client flashlight status
 RegisterServerEvent('Weapons:Server:Toggle')
-AddEventHandler('Weapons:Server:Toggle', function(bool, flashlight)
+AddEventHandler('Weapons:Server:Toggle', function(bool, flashlight, weapon)
     if bool then
-        Flashlights[source] = flashlight
+        Flashlights[source] = {flashlight, weapon}
     else
         Flashlights[source] = nil
     end

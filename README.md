@@ -2,7 +2,7 @@
 # Inferno Collection: Weapons
 [![Build Status](https://travis-ci.com/inferno-collection/Weapons.svg?branch=master)](https://travis-ci.com/inferno-collection/Weapons)
 
-__Public Alpha Version 1.23__
+__Public Beta Version 1.26__
 
 Adds fire modes to the weapons of your choice, as well as more realistic reloads (including disabling automatic reloads), consistent flashlights (stay turned on even when weapon is not being aimed), more blood when injured, and limping after being injured.
 
@@ -15,6 +15,9 @@ Presently, the following can be customized:
 ***
 ### Development Showcase Video (Showing Version 1.21 Beta)
 [![Watch the Development Showcase video](https://img.youtube.com/vi/NdxUMO0YIJE/maxresdefault.jpg)](https://www.youtube.com/watch?v=NdxUMO0YIJE)
+
+### Development Showcase Video (Showing Version 1.26 Beta)
+[![Watch the Development Showcase video](https://img.youtube.com/vi/HC3lRrcPN4Q/maxresdefault.jpg)](https://www.youtube.com/watch?v=HC3lRrcPN4Q)
 
 > The Inferno Collection Team
 * ChristopherM

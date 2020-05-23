@@ -1,4 +1,4 @@
--- Inferno Collection Weapons Version 1.26 Alpha
+-- Inferno Collection Weapons Version 1.26 Beta
 --
 -- Copyright (c) 2019-2020, Christopher M, Inferno Collection. All rights reserved.
 --
@@ -178,7 +178,7 @@ AddEventHandler('playerSpawned', function ()
 	FireMode.LastWeapon = false
 	-- Remove last weapon type
 	FireMode.LastWeaponActive = false
-	-- Remove all active flashlights
+	-- Remove all active local flashlights
 	TriggerServerEvent('Weapons:Server:Toggle', false)
 	FireMode.WeaponFlashlights = {}
 end)
@@ -308,18 +308,14 @@ Citizen.CreateThread(function()
 					end
 
 					-- If fire mode is set to safety
-					if FireMode.Weapons[PedWeapon] == 0 then
-						FireMode.ShootingDisable = true
-					end
+					if FireMode.Weapons[PedWeapon] == 0 then FireMode.ShootingDisable = true end
 
 					local _, Ammo = GetAmmoInClip(PlayerPed, PedWeapon)
 					-- If R was just pressed and client is not already reloading
 					if IsDisabledControlJustPressed(1, 45) and not FireMode.Reloading then
 						FireMode.Reloading = true
 						FireMode.ShootingDisable = true
-						if IsPlayerFreeAiming(PlayerId) then
-							SetPlayerForcedAim(PlayerId, true)
-						end
+						if IsPlayerFreeAiming(PlayerId) then SetPlayerForcedAim(PlayerId, true) end
 						Citizen.Wait(400)
 						MakePedReload(PlayerPed)
 						Citizen.Wait(300)
@@ -333,9 +329,7 @@ Citizen.CreateThread(function()
 						-- Set the ammo in the magazine to one
 						SetAmmoInClip(PlayerPed, PedWeapon, 1)
 						-- If left click just pressed
-						if IsDisabledControlJustPressed(1, 24) then
-							PlaySoundFrontend(-1, 'Faster_Click', 'RESPAWN_ONLINE_SOUNDSET', 1)
-						end
+						if IsDisabledControlJustPressed(1, 24) then PlaySoundFrontend(-1, 'Faster_Click', 'RESPAWN_ONLINE_SOUNDSET', 1) end
 					-- If left click just pressed
 					elseif IsDisabledControlJustPressed(1, 24) then
 						-- If the fire mode is set to safety
@@ -442,6 +436,7 @@ Citizen.CreateThread(function()
 							FireMode.LastWeapon
 						)
 					end
+					
 					RemovedFlashlight = false
 					break
 				end
@@ -549,7 +544,9 @@ end)
 
 -- Updates the synced flashliught variable
 RegisterNetEvent('Weapons:Client:Return')
-AddEventHandler('Weapons:Client:Return', function(NewFlashlights) Flashlights.All = NewFlashlights end)
+AddEventHandler('Weapons:Client:Return', function(NewFlashlights)
+	Flashlights.All = NewFlashlights
+end)
 
 -- NUI function
 function NewNUIMessage (Type, Load)

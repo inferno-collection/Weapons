@@ -1,4 +1,4 @@
--- Inferno Collection Weapons Version 1.26 Alpha
+-- Inferno Collection Weapons Version 1.26 Beta
 --
 -- Copyright (c) 2019-2020, Christopher M, Inferno Collection. All rights reserved.
 --
@@ -10,11 +10,11 @@
 
 name 'Weapons - Inferno Collection'
 
-description 'Adds fire modes to the weapons of your choice, as well as more realistic reloads (including disabling automatic reloads), more blood when injured, and limping after being injured.'
+description 'Adds fire modes to the weapons of your choice, as well as more realistic reloads (including disabling automatic reloads), consistent flashlights (stay turned on even when weapon is not being aimed), more blood when injured, and limping after being injured.'
 
 author 'Inferno Collection (inferno-collection.com)'
 
-version '1.26 Alpha'
+version '1.26 Beta'
 
 url 'https://inferno-collection.com'
 

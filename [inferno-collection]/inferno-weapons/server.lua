@@ -1,4 +1,4 @@
--- Inferno Collection Weapons Version 1.27 Alpha
+-- Inferno Collection Weapons Version 1.28 Alpha
 --
 -- Copyright (c) 2019-2020, Christopher M, Inferno Collection. All rights reserved.
 --
@@ -15,11 +15,14 @@
 
 -- Master Flashlight storage variable
 local Flashlights = {}
-local LastCount = false
+local ChangeNeeded = false
 
 -- Remove flashlights of players who are no longer in server
 AddEventHandler('playerDropped', function ()
-    if Flashlights[source] then Flashlights[source] = nil end
+    if Flashlights[source] then
+        Flashlights[source] = nil
+        ChangeNeeded = true
+    end
 end)
 
 -- Toggle client flashlight status
@@ -30,18 +33,18 @@ AddEventHandler('Weapons:Server:Toggle', function(bool, flashlight, weapon)
     else
         Flashlights[source] = nil
     end
+
+    ChangeNeeded = true
 end)
 
 Citizen.CreateThread(function()
     while true do
         Citizen.Wait(0)
 
-        if not LastCount then LastCount = #Flashlights end
-
-        if #Flashlights ~= LastCount then
-            LastCount = #Flashlights
+        if ChangeNeeded then
             -- Updates all clients for this tick
             TriggerClientEvent('Weapons:Client:Return', -1, Flashlights)
+            ChangeNeeded = false
         end
     end
 end)

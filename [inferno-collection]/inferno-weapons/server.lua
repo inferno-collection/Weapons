@@ -1,4 +1,4 @@
--- Inferno Collection Weapons Version 1.29 Alpha
+-- Inferno Collection Weapons Version 1.291 Alpha
 --
 -- Copyright (c) 2019-2020, Christopher M, Inferno Collection. All rights reserved.
 --
@@ -21,8 +21,9 @@ local ChangeNeeded = false
 AddEventHandler('playerDropped', function ()
     if Flashlights[source] then
         Flashlights[source] = nil
-        ChangeNeeded = true
     end
+
+    TriggerClientEvent('Weapons:Client:Return', -1, Flashlights)
 end)
 
 -- Toggle client flashlight status
@@ -34,17 +35,5 @@ AddEventHandler('Weapons:Server:Toggle', function(bool, flashlight, weapon)
         Flashlights[source] = nil
     end
 
-    ChangeNeeded = true
-end)
-
-Citizen.CreateThread(function()
-    while true do
-        Citizen.Wait(0)
-
-        if ChangeNeeded then
-            -- Updates all clients for this tick
-            TriggerClientEvent('Weapons:Client:Return', -1, Flashlights)
-            ChangeNeeded = false
-        end
-    end
+    TriggerClientEvent('Weapons:Client:Return', -1, Flashlights)
 end)

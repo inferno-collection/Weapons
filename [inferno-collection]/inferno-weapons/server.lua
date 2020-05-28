@@ -1,4 +1,4 @@
--- Inferno Collection Weapons Version 1.291 Alpha
+-- Inferno Collection Weapons Version 1.292 Alpha
 --
 -- Copyright (c) 2019-2020, Christopher M, Inferno Collection. All rights reserved.
 --
@@ -15,7 +15,6 @@
 
 -- Master Flashlight storage variable
 local Flashlights = {}
-local ChangeNeeded = false
 
 -- Remove flashlights of players who are no longer in server
 AddEventHandler('playerDropped', function ()

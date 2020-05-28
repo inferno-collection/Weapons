@@ -1,4 +1,4 @@
--- Inferno Collection Weapons Version 1.28 Alpha
+-- Inferno Collection Weapons Version 1.29 Alpha
 --
 -- Copyright (c) 2019-2020, Christopher M, Inferno Collection. All rights reserved.
 --
@@ -130,6 +130,8 @@ FireMode.Weapons = {}
 FireMode.WeaponFlashlights = {}
 -- Last weapon in use
 FireMode.LastWeapon = false
+-- Last weapon in use with flashlight
+FireMode.LastWeaponFlashlight = false
 -- Last weapon type in use
 FireMode.LastWeaponActive = false
 -- Is shooting currently disabled?
@@ -439,12 +441,7 @@ Citizen.CreateThread(function()
 				if HasPedGotWeaponComponent(PlayerPed, FireMode.LastWeapon, GetHashKey(Flashlight)) then
 					if not FireMode.WeaponFlashlights[FireMode.LastWeapon] then
 						FireMode.WeaponFlashlights[FireMode.LastWeapon] = {Flashlight, false }
-					elseif FireMode.WeaponFlashlights[FireMode.LastWeapon][2] then
-						TriggerServerEvent('Weapons:Server:Toggle',
-							FireMode.WeaponFlashlights[FireMode.LastWeapon][2],
-							FireMode.WeaponFlashlights[FireMode.LastWeapon][1],
-							FireMode.LastWeapon
-						)
+						FireMode.LastWeaponFlashlight = FireMode.LastWeapon
 					end
 
 					RemovedFlashlight = false
@@ -455,6 +452,15 @@ Citizen.CreateThread(function()
 			if RemovedFlashlight then
 				FireMode.WeaponFlashlights[FireMode.LastWeapon] = nil
 				TriggerServerEvent('Weapons:Server:Toggle', false)
+			end
+
+			if (FireMode.LastWeapon ~= FireMode.LastWeaponFlashlight) and FireMode.WeaponFlashlights[FireMode.LastWeapon] then
+				TriggerServerEvent('Weapons:Server:Toggle',
+					FireMode.WeaponFlashlights[FireMode.LastWeapon][2],
+					FireMode.WeaponFlashlights[FireMode.LastWeapon][1],
+					FireMode.LastWeapon
+				)
+				FireMode.LastWeaponFlashlight = FireMode.LastWeapon
 			end
 
 			-- If E just pressed

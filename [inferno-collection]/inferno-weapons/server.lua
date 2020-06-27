@@ -1,4 +1,4 @@
--- Inferno Collection Weapons Version 1.3 Alpha
+-- Inferno Collection Weapons Version 1.3 Beta
 --
 -- Copyright (c) 2019-2020, Christopher M, Inferno Collection. All rights reserved.
 --
